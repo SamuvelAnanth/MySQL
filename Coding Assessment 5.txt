@@ -1,0 +1,85 @@
+1) Consider the following relations for a boat management application for a beach resort:
+Choose appropriate foreign keys and other constraints
+SAILOR (SID,NAME,DOB,GENDER)
+* name column must have a value
+mysql> create table sailor(sid int primary key,name varchar(50) not null,dob date,gender varchar(6),foreign key(sid) references boat(bid));
+Query OK, 0 rows affected (0.16 sec)
+mysql> desc sailor;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| sid    | int         | NO   | PRI | NULL    |       |
+| name   | varchar(50) | NO   |     | NULL    |       |
+| dob    | date        | YES  |     | NULL    |       |
+| gender | varchar(6)  | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+BOAT (BID,BTYPE,BNAME,COLOR)
+** Boat name must be unique
+BTYPE can take two values (D, S)
+D (Deluxe) S (Super Deluxe)
+mysql> create table boat(bid int primary key,btype enum('D','S'),bname varchar(50) unique key,color varchar(30));
+Query OK, 0 rows affected (0.20 sec)
+mysql> desc boat;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| bid   | int           | NO   | PRI | NULL    |       |
+| btype | enum('D','S') | YES  |     | NULL    |       |
+| bname | varchar(50)   | YES  | UNI | NULL    |       |
+| color | varchar(30)   | YES  |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+SAILS (SID, BID, DOT, SHIFT)
+DOT (Date of Trip)
+SHIFT can take two values (FN or AN)
+
+mysql> create table sails(sid int,bid int,dot date,shift enum('FN','AN'),foreign key(sid) references sailor(sid),foreign key(bid) references boat(bid));
+Query OK, 0 rows affected (0.26 sec)
+mysql> desc sails;
++-------+-----------------+------+-----+---------+-------+
+| Field | Type            | Null | Key | Default | Extra |
++-------+-----------------+------+-----+---------+-------+
+| sid   | int             | YES  | MUL | NULL    |       |
+| bid   | int             | YES  | MUL | NULL    |       |
+| dot   | date            | YES  |     | NULL    |       |
+| shift | enum('FN','AN') | YES  |     | NULL    |       |
++-------+-----------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+Insert records into the above tables.
+mysql> select * from sailor;
++-----+--------------+------------+--------+
+| sid | name         | dob        | gender |
++-----+--------------+------------+--------+
+| 501 | Jeeva        | 2002-06-13 | Male   |
+| 502 | Sanjay       | 2001-12-24 | Male   |
+| 503 | Sarun        | 2001-04-05 | Male   |
+| 504 | Priya Sweety | 2000-11-23 | Female |
+| 505 | Kavi Cutie   | 2001-08-08 | Female |
++-----+--------------+------------+--------+
+5 rows in set (0.00 sec)
+mysql> select * from boat;
++-----+-------+-------------+--------+
+| bid | btype | bname       | color  |
++-----+-------+-------------+--------+
+| 501 | D     | Titanic     | White  |
+| 502 | D     | Black Pearl | Black  |
+| 503 | S     | Parisal     | Brown  |
+| 504 | S     | Kappal      | Red    |
+| 505 | D     | Padagu      | Yellow |
++-----+-------+-------------+--------+
+5 rows in set (0.00 sec)
+mysql> select * from sails;
++------+------+------------+-------+
+| sid  | bid  | dot        | shift |
++------+------+------------+-------+
+|  501 |  501 | 2023-03-01 | FN    |
+|  502 |  502 | 2023-03-16 | AN    |
+|  503 |  503 | 2023-03-18 | AN    |
+|  504 |  504 | 2023-03-22 | FN    |
+|  505 |  505 | 2023-03-28 | AN    |
++------+------+------------+-------+
+5 rows in set (0.00 sec)
